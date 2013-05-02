@@ -51,7 +51,7 @@ from saml2.virtual_org import VirtualOrg
 from saml2.config import config_factory
 
 from saml2.response import response_factory, attribute_response
-from saml2.response import LogoutResponse
+from saml2.samlp import LogoutResponse
 from saml2.response import AuthnResponse
 
 from saml2 import BINDING_HTTP_REDIRECT

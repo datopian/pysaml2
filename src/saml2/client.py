@@ -282,7 +282,7 @@ class Saml2Client(Base):
             else:
                 status = samlp.STATUS_REQUEST_DENIED
 
-            destination, (id, response) = self.create_logout_response(
+            destination, response = self.create_logout_response(
                                                             request.issuer.text,
                                                             request.id,
                                                             status)
