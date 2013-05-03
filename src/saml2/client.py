@@ -278,7 +278,7 @@ class Saml2Client(Base):
 
             if request.name_id.text == subject_id:
                 status = samlp.STATUS_SUCCESS
-                success = self.local_logout(subject_id)
+                #success = self.local_logout(subject_id)
             else:
                 status = samlp.STATUS_REQUEST_DENIED
 
