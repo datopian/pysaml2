@@ -306,7 +306,7 @@ class SAML2Plugin(FormPluginBase):
             logger.info("[sp.challenge] entity_id: %s" % entity_id)
             # Do the AuthnRequest
             _cli = self.saml_client
-            _binding = BINDING_HTTP_REDIRECT
+            _binding = BINDING_HTTP_POST
             try:
                 srvs = _cli.metadata.single_sign_on_service(entity_id, _binding)
                 logger.debug("srvs: %s" % srvs)
@@ -329,7 +329,10 @@ class SAML2Plugin(FormPluginBase):
                 logger.debug('redirect to: %s' % ht_args["headers"][0][1])
                 return HTTPSeeOther(headers=ht_args["headers"])
             else :
-                return ht_args["data"]
+                def _app(environ, start_response):
+                    start_response('200 OK', [('content-type', 'text/html')])
+                    return [''.join(ht_args["data"])]
+                return _app
 
     def _construct_identity(self, session_info):
         identity = {
