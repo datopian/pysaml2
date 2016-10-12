@@ -270,7 +270,6 @@ class Base(Entity):
                              extensions, sign,
                              assertion_consumer_service_url=service_url,
                              protocol_binding=binding,
-                             name_id_policy=name_id_policy,
                              provider_name=my_name,
                              scoping=scoping)
 
