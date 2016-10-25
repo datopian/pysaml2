@@ -62,7 +62,7 @@ def http_form_post_message(message, location, relay_state="", typ="SAMLRequest")
     :param relay_state: for preserving and conveying state information
     :return: A tuple containing header information and a HTML message.
     """
-    response = ["<head>", """<title>SAML 2.0 POST</title>""", "</head><body>"]
+    response = ["<head><title>SAML 2.0 POST</title></head><style>body{font-family:'Lato',Arial,sans-serif;}#logging{position:absolute;top:40%;left:50%;margin-top:-20px;margin-left:-100px;width:200px;}#logging:after{content:' .';animation:dots 1s steps(5,end) infinite;}@keyframes dots{0%,20%{color:rgba(255,255,255,0);text-shadow:.25em 0 0 rgba(255,255,255,0),.5em 0 0 rgba(255,255,255,0);}40%{color:black;text-shadow:.25em 0 0 rgba(255,255,255,0),.5em 0 0 rgba(255,255,255,0);}60%{text-shadow:.25em 0 0 black,.5em 0 0 rgba(255,255,255,0);}80%,100%{text-shadow:.25em 0 0 black,.5em 0 0 black;}}</style><body>"]
 
     if not isinstance(message, basestring):
         message = "%s" % (message,)
@@ -73,10 +73,12 @@ def http_form_post_message(message, location, relay_state="", typ="SAMLRequest")
         _msg = message
 
     response.append(FORM_SPEC % (location, typ, _msg, relay_state))
-                                
+    response.append("<div id=logging>Connecting MAX.gov</div>")
     response.append("""<script type="text/javascript">""")
+    response.append("     document.getElementsByTagName('input')[2].style.display='none';")
     response.append("     window.onload = function ()")
-    response.append(" { document.forms[0].submit(); }")
+    response.append(" { document.forms[0].submit(); };")
+    response.append("     setTimeout(function(){document.getElementsByTagName('input')[2].style.display='';document.getElementById('logging').style.display='none'},45000)")
     response.append("""</script>""")
     response.append("</body>")
     
