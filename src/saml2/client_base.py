@@ -57,6 +57,7 @@ from saml2 import BINDING_HTTP_REDIRECT
 from saml2 import BINDING_HTTP_POST
 from saml2 import BINDING_PAOS
 import logging
+from pylons import config
 
 logger = logging.getLogger(__name__)
 
@@ -235,28 +236,14 @@ class Base(Entity):
             else:
                 my_name = self._my_name()
 
-        try:
-            name_id_policy = kwargs["name_id_policy"]
-        except:
-            if allow_create:
-                allow_create="true"
-            else:
-                allow_create="false"
-
-            # Profile stuff, should be configurable
-            if nameid_format is None or nameid_format == NAMEID_FORMAT_TRANSIENT:
-                name_id_policy = samlp.NameIDPolicy(allow_create=allow_create,
-                                                    format=NAMEID_FORMAT_TRANSIENT)
-            else:
-                name_id_policy = samlp.NameIDPolicy(allow_create=allow_create,
-                                                    format=nameid_format)
-
-            if vorg:
-                try:
-                    name_id_policy.sp_name_qualifier = vorg
-                    name_id_policy.format = saml.NAMEID_FORMAT_PERSISTENT
-                except KeyError:
-                    pass
+        requested_authn_context = None
+        if config.get('saml2.max_security_level'):
+            context_class_ref = saml.AuthnContextClassRef()
+            context_class_ref.text = config.get('saml2.max_security_level')
+            requested_authn_context = samlp.RequestedAuthnContext()
+            requested_authn_context.authn_context_class_ref.append(
+                context_class_ref
+            )
 
         if extensions is None:
             extensions = []
@@ -269,6 +256,7 @@ class Base(Entity):
         return self._message(AuthnRequest, destination, id, consent,
                              extensions, sign,
                              assertion_consumer_service_url=service_url,
+                             requested_authn_context=requested_authn_context,
                              protocol_binding=binding,
                              provider_name=my_name,
                              scoping=scoping)
