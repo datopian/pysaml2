@@ -36,7 +36,7 @@ class Population(object):
         return self.cache.entities(subject_id)
 
     def get_identity(self, subject_id, entities=None,
-                     check_not_on_or_after=True):
+                     check_not_on_or_after=False):
         return self.cache.get_identity(subject_id, entities,
                                        check_not_on_or_after)
 
@@ -50,7 +50,7 @@ class Population(object):
     def remove_person(self, subject_id):
         self.cache.delete(subject_id)
         
-    def get_entityid(self, subject_id, source_id, check_not_on_or_after=True):
+    def get_entityid(self, subject_id, source_id, check_not_on_or_after=False):
         try:
             return self.cache.get(subject_id, source_id,
                                   check_not_on_or_after)["name_id"]
