@@ -28,6 +28,7 @@ import saml2
 import base64
 import urllib
 from saml2.s_utils import deflate_and_base64_encode
+from webhelpers.html import url_escape
 import logging
 
 logger = logging.getLogger(__name__)
@@ -72,7 +73,7 @@ def http_form_post_message(message, location, relay_state="", typ="SAMLRequest")
     else:
         _msg = message
 
-    response.append(FORM_SPEC % (location, typ, _msg, relay_state))
+    response.append(FORM_SPEC % (location, typ, _msg, url_escape(relay_state)))
     response.append("<div id=logging>Connecting MAX.gov</div>")
     response.append("""<script type="text/javascript">""")
     response.append("     document.getElementsByTagName('input')[2].style.display='none';")
